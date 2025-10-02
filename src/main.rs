@@ -1,7 +1,7 @@
 use std::sync::{Arc, Mutex};
 
 use anyhow::Result;
-use axum::{Extension, Router, extract::Path, http::StatusCode, response::Redirect, routing::get};
+use axum::{extract::Path, http::StatusCode, response::{Html, Redirect}, routing::get, Extension, Router};
 
 use rand::{Rng, rng};
 use tokio::{self, signal};
@@ -16,7 +16,7 @@ async fn main() -> Result<()> {
     // build our application with some routes
     let app = Router::new()
         // routes are matched from bottom to top
-        .route("/", get(healthz))
+        .route("/", get(home))
         .route("/healthz/", get(healthz))
         .route("/code/{code}/", get(empty_response))
         .route("/empty/{code}/", get(empty_response))
@@ -40,6 +40,10 @@ async fn main() -> Result<()> {
 }
 
 async fn healthz() {}
+
+async fn home() -> Html<&'static str> {
+    Html(include_str!("static/home.html"))
+}
 
 async fn empty_response(Path(code): Path<u16>) -> StatusCode {
     StatusCode::from_u16(code).unwrap_or(StatusCode::BAD_REQUEST)
