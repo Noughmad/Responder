@@ -18,13 +18,13 @@ async fn main() -> Result<()> {
         // routes are matched from bottom to top
         .route("/", get(healthz))
         .route("/healthz/", get(healthz))
-        .route("/code/:code/", get(empty_response))
-        .route("/empty/:code/", get(empty_response))
-        .route("/error/random/:percent/", get(random_error))
-        .route("/error/count/:count/", get(error_count))
+        .route("/code/{code}/", get(empty_response))
+        .route("/empty/{code}/", get(empty_response))
+        .route("/error/random/{percent}/", get(random_error))
+        .route("/error/count/{count}/", get(error_count))
         .route("/error/count/reset/", get(error_count_reset))
         .route("/redirect/", get(redirect))
-        .route("/redirect/:code/", get(redirect_code))
+        .route("/redirect/{code}/", get(redirect_code))
         .route("/redirect/nested", get(redirect_nested))
         .layer(Extension(Arc::new(Mutex::new(State::default()))));
     // logging so we can see whats going on
