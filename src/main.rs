@@ -32,7 +32,9 @@ async fn main() -> Result<()> {
     // run it with hyper
 
     // run our app with hyper, listening globally on port 3000
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
+    let port = std::env::var("PORT").map_or(Ok(3000), |v| v.parse())?;
+    let listener = tokio::net::TcpListener::bind(("0.0.0.0", port)).await?;
+    println!("🎤 Listening on {}", listener.local_addr()?);
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal())
         .await?;
